@@ -1,1 +1,46 @@
 
+'''
+class cofunc:
+    terminal.conn.send("\u001b[32mOK\u001b[0m \u001b[42;1m{text}\u001b[0m\n\r".format(text=adtext))
+
+class terminal:
+  conn=0
+  config=0
+  def connection():
+    file=open("micropyther.ini")
+    terminal.config=eval(file.read().replace("\r", ""))
+    sessionopen=0
+    print(terminal.config)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(('', 9100))
+    s.listen(1)
+    terminal.conn, addr = s.accept()
+    print('Got a connection from %s' % str(addr))
+    while True:        
+        elif request[0]=="exec":
+          code = ""
+          try:
+            while 1:
+              terminal.conn.send(">>> ")
+              recv = terminal.conn.recv(1024).decode().replace("\r\n", "")
+              if recv!="":
+                code+=(recv+"\n")
+              else:
+                break
+            exec(code)
+            cofunc.sendok()
+          except Exception as inst:
+
+            terminal.conn.send("\u001b[41;1m{type} {error}\u001b[0m\n\r".format(type=type(inst), error=inst))        
+        
+        elif request[0]=="cat":
+          try:
+            LOCAL_FILE=open(request[1])
+            LOCAL_DATA=LOCAL_FILE.read().split("\r")
+            for LOCAL_LINE in LOCAL_DATA:
+              terminal.conn.send(str(LOCAL_LINE+"\r\n"))
+            LOCAL_FILE.close()
+            terminal.conn.send("\x04")
+            del LOCAL_FILE
+          except Exception as inst:
+            terminal.conn.send("\u001b[41;1m{type} {error}\u001b[0m\n\r".format(type=type(inst), error=inst))
